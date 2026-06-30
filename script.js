@@ -26,15 +26,22 @@
 const BASE_URL = 'http://192.168.1.102:5000/api';
 // Variabile globale per memorizzare i prodotti una volta scaricati dall'API
 let tuttiIProdotti = [];
-// Selettori dall'HTML:
-const id = document.querySelector('#');
-const nome = document.querySelector('#');
-const descrizione = document.querySelector('#');
-const categoria = document.querySelector('#');
-const prezzo = document.querySelector('#');
-const immagine = document.querySelector('#');
-const disponibilità = document.querySelector('#');
+// Selettori dall'HTML per la Tabella e i Filtri:
+const tabellaProdotti = document.querySelector('#tabellaProdotti');
+const cercaNomeInput = document.querySelector('#cercaNome');
+const filtroCategoriaSelect = document.querySelector('#filtroCategoria');
 
+// Selettori dall'HTML per il Modale e i suoi campi interni:
+const modale = document.querySelector('#modale');
+const chiudiModaleBtn = document.querySelector('#chiudi');
+
+const prodottoNome = document.querySelector('#prodottoNome');
+const prodottoImmagine = document.querySelector('#prodottoImmagine');
+const prodottoDescrizione = document.querySelector('#prodottoDescrizione');
+const prodottoPrezzo = document.querySelector('#prodottoPrezzo');
+const prodottoDisponibilita = document.querySelector('#prodottoDisponibilita');
+
+// Funzione recuperaDati:
 async function recuperaDati() {
 
 }
