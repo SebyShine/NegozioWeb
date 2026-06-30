@@ -11,24 +11,35 @@
 </head>
 
 <body>
-    <!-- Inserire qui il contenuto della pagina -->
+
     <div class="container">
         <div>
             <table>
                 <thead>
-                    <th>--</th>
+                    <!-- <th>--</th> -->
                     <th>Immagine</th>
                     <th>Nome</th>
                     <th>Prezzo</th>
                     <th>Disponibilità</th>
                 </thead>
                 <tbody id="tabellaProdotti">
-                    
+
                 </tbody>
             </table>
         </div>
+
+        <div class="modal nascosto" id="modale">
+            <div class="modal-content">
+                <h2 id="prodottoNome"></h2>
+                <img src="" alt="" id="prodottoImmagine">
+                <p id="prodottoDescrizione"></p>
+                <p id="prodottoPrezzo"></p>
+                <p id="prodottoDisponibilità"></p>
+                <span id="chiudi" class="close">×</span>
+            </div>
+        </div>
     </div>
-    <!-- Ricordarsi di inserire il link al JS -->
+
     <script src="script.js"></script>
 </body>
 
