@@ -22,5 +22,18 @@
  * Nota: i filtri devono lavorare insieme e sui dati già recuperati, senza fare nuove richieste all'API
  */
 
+// API: ( puo essere localhost o il pc del docente)
+const BASE_URL = 'http://192.168.1.102:5000/api';
+// Selettori dall'HTML:
+const id = document.querySelector('#');
+const nome = document.querySelector('#');
+const descrizione = document.querySelector('#');
+const categoria = document.querySelector('#');
+const prezzo = document.querySelector('#');
+const immagine = document.querySelector('#');
+const disponibilità = document.querySelector('#');
 
+async function recuperaDati() {
+        
+}
 
