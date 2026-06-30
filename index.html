@@ -6,17 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prodotti Negozio Online</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Ricordarsi di inserire il link al CSS -->
-
 </head>
 
 <body>
 
     <div class="container">
+        <h1>Negozio Online</h1>
+
+        <div class="filters">
+            <input type="text" id="cercaNome" class="search-bar" placeholder="Cerca prodotto per nome...">
+            <select id="filtroCategoria" class="category-filter">
+                <option value="">Tutte le categorie</option>
+            </select>
+        </div>
+
         <div>
             <table>
                 <thead>
-                    <!-- <th>--</th> -->
                     <th>Immagine</th>
                     <th>Nome</th>
                     <th>Prezzo</th>
@@ -34,7 +40,7 @@
                 <img src="" alt="" id="prodottoImmagine">
                 <p id="prodottoDescrizione"></p>
                 <p id="prodottoPrezzo"></p>
-                <p id="prodottoDisponibilità"></p>
+                <p id="prodottoDisponibilita"></p>
                 <span id="chiudi" class="close">×</span>
             </div>
         </div>
