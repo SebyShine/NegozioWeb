@@ -24,6 +24,8 @@
 
 // API: ( puo essere localhost o il pc del docente)
 const BASE_URL = 'http://192.168.1.102:5000/api';
+// Variabile globale per memorizzare i prodotti una volta scaricati dall'API
+let tuttiIProdotti = [];
 // Selettori dall'HTML:
 const id = document.querySelector('#');
 const nome = document.querySelector('#');
@@ -34,6 +36,6 @@ const immagine = document.querySelector('#');
 const disponibilità = document.querySelector('#');
 
 async function recuperaDati() {
-        
+
 }
 
