@@ -20,153 +20,129 @@
  */
 
 // API: ( puo essere localhost o il pc del docente)
-// CORRETTO: Lasciato solo /api così l'unione con /products sotto funziona
+// Costante con l'indirizzo base API
 const BASE_URL = 'http://192.168.1.102:5000/api';
 
-// Variabile globale per memorizzare i prodotti una volta scaricati dall'API
+// Variabile globale che salva i prodotti
 let tuttiIProdotti = [];
-// Selettori dall'HTML per la Tabella e i Filtri:
-const tabellaProdotti = document.querySelector('#tabellaProdotti');
-const cercaNomeInput = document.querySelector('#cercaNome');
-const filtroCategoriaSelect = document.querySelector('#filtroCategoria');
 
-// Selettori dall'HTML per il Modale e i suoi campi interni:
-const modale = document.querySelector('#modale');
-const chiudiModaleBtn = document.querySelector('#chiudi');
+// Selettori dall'html
+const tabellaProdotti = document.querySelector('#tabellaProdotti'); // Seleziona il corpo della tabella
+const cercaNomeInput = document.querySelector('#cercaNome'); // Seleziona la barra di ricerca
+const filtroCategoriaSelect = document.querySelector('#filtroCategoria'); // Seleziona il menu a tendina categorie
+const modale = document.querySelector('#modale'); // Seleziona il contenitore del modale
+const chiudiModaleBtn = document.querySelector('#chiudi'); // Seleziona il pulsante di chiusura (×)
+const prodottoNome = document.querySelector('#prodottoNome'); // Seleziona il titolo nel modale
+const prodottoImmagine = document.querySelector('#prodottoImmagine'); // Seleziona l'immagine nel modale
+const prodottoDescrizione = document.querySelector('#prodottoDescrizione'); // Seleziona la descrizione nel modale
+const prodottoPrezzo = document.querySelector('#prodottoPrezzo'); // Seleziona il prezzo nel modale
+const prodottoDisponibilita = document.querySelector('#prodottoDisponibilita'); // Seleziona la disponibilità nel modale
 
-const prodottoNome = document.querySelector('#prodottoNome');
-const prodottoImmagine = document.querySelector('#prodottoImmagine');
-const prodottoDescrizione = document.querySelector('#prodottoDescrizione');
-const prodottoPrezzo = document.querySelector('#prodottoPrezzo');
-const prodottoDisponibilita = document.querySelector('#prodottoDisponibilita');
-
-// Funzione recuperaDati:
+// Funzione asincrona che recupera i dati dal server
 async function recuperaDati() {
-    // Apro Try/Catch:
-    try {
-        // Effettuo la chiamata fetch verso l'endpoint dei prodotti (assumendo /products):
-        const response = await fetch(`${BASE_URL}/products`);
-        // Controllo risposta ok:
-        if (!response.ok) {
-            throw new Error(`Errore di rete: ${response.status}`);
+    // Apro Try / Catch
+    try { // Prova a eseguire
+        const response = await fetch(`${BASE_URL}/products`); // Esegue la richiesta HTTP
+        if (!response.ok) { // Controlla se la risposta è valida
+            throw new Error(`Errore di rete: ${response.status}`); // Genera un errore se fallisce
         }
-        // Conversione in JSON in una variabile:
-        tuttiIProdotti = await response.json();
-
-        // Inizializzo la pagina mostrando tutti i prodotti e configurando il filtro delle categorie
-        // CORRETTO: Le funzioni vanno avviate QUI dentro, quando i dati sono effettivamente pronti!
-        mostraProdotti(tuttiIProdotti);
-        popolaCategorie(tuttiIProdotti);
-
-    } catch (error) {
-        // Dai l'errore:
-        // CORRETTO: Cambiato "errore" in "error" per corrispondere al catch
-        console.error("Si è verificato un errore nel recupero dei dati:", error);
-        alert("Impossibile caricare i prodotti.");
+        tuttiIProdotti = await response.json(); // Converte i dati in JSON
+        mostraProdotti(tuttiIProdotti); // Popola la tabella
+        popolaCategorie(tuttiIProdotti); // Popola il filtro categorie
+    } catch (error) { // Cattura eventuali errori
+        console.error("Errore recupero dati:", error); // Stampa errore in console
+        alert("Impossibile caricare i prodotti."); // Avvisa l'utente
     }
 }
 
-// Funzione mostraProdotti:
+// Funzione che popola la tabella HTML
 function mostraProdotti(prodotti) {
-    // Svuoto tabella:
-    tabellaProdotti.innerHTML = "";
-
-    if (prodotti.length === 0) {
+    tabellaProdotti.innerHTML = ""; // Svuota la tabella
+    if (prodotti.length === 0) { // Controlla se l'array è vuoto
         tabellaProdotti.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nessun prodotto trovato.</td></tr>`;
-        return;
+        return; // Ferma l'esecuzione
     }
-    // Ciclo per creare la riga del prodotto in tabella:
-    prodotti.forEach(prodotto => {
-        const rigaProdotto = creaRigaProdotto(prodotto);
-        // CORRETTO: Cambiato "riga" in "rigaProdotto"
-        tabellaProdotti.append(rigaProdotto);
+    prodotti.forEach(prodotto => { // Cicla ogni prodotto
+        const rigaProdotto = creaRigaProdotto(prodotto); // Crea la riga
+        tabellaProdotti.append(rigaProdotto); // Aggiunge la riga in tabella
     });
 }
 
-// Funzione creaRigaProdotto
+// Funzione che genera il codice HTML della singola riga
 function creaRigaProdotto(prodotto) {
-    const tr = document.createElement('tr');
+    const tr = document.createElement('tr'); // Crea elemento <tr>
+    const classeDispo = prodotto.disponibilita ? 'available' : 'unavailable'; // Imposta classe CSS
+    const testoDispo = prodotto.disponibilita ? 'Disponibile' : 'Non disponibile'; // Imposta testo
 
-    // Mostro se è Disponibile o Non Disponibile:
-    const classeDispo = prodotto.disponibilita ? 'available' : 'unavailable';
-    const testoDispo = prodotto.disponibilita ? 'Disponibile' : 'Non disponibile';
-
-    // Inserisco il contenuto HTML nella riga della tabella
     tr.innerHTML = `
         <td><img src="${prodotto.immagine}" alt="${prodotto.nome}"></td>
         <td><strong>${prodotto.nome}</strong></td>
         <td>€ ${prodotto.prezzo.toFixed(2)}</td>
         <td class="${classeDispo}">${testoDispo}</td>
-    `;
+    `; // Inserisce i dati HTML
 
-    // Aggiungo l'event listener per aprire il modale al click sulla riga
-    tr.addEventListener('click', () => {
-        apriModaleDettagli(prodotto);
+    tr.addEventListener('click', () => { // Ascolta il click sulla riga
+        apriModaleDettagli(prodotto); // Apre il modale
     });
 
-    return tr;
+    return tr; // Ritorna la riga pronta
 }
 
+// Funzione che inserisce i dati nel modale e lo rende visibile
 function apriModaleDettagli(prodotto) {
-    // Riempio i campi del modale con i dati del prodotto selezionato
-    prodottoNome.textContent = prodotto.nome;
-    prodottoImmagine.src = prodotto.immagine;
-    prodottoImmagine.alt = prodotto.nome;
-    prodottoDescrizione.innerHTML = `<strong>Descrizione:</strong> ${prodotto.descrizione}`;
-    prodottoPrezzo.innerHTML = `<strong>Prezzo:</strong> € ${prodotto.prezzo.toFixed(2)}`;
+    prodottoNome.textContent = prodotto.nome; // Inserisce nome
+    prodottoImmagine.src = prodotto.immagine; // Inserisce URL immagine
+    prodottoImmagine.alt = prodotto.nome; // Inserisce testo alternativo immagine
+    prodottoDescrizione.innerHTML = `<strong>Descrizione:</strong> ${prodotto.descrizione}`; // Inserisce descrizione
+    prodottoPrezzo.innerHTML = `<strong>Prezzo:</strong> € ${prodotto.prezzo.toFixed(2)}`; // Inserisce prezzo
 
-    // Gestione visualizzazione disponibilità nel modale
-    if (prodotto.disponibilita) {
+    if (prodotto.disponibilita) { // Verifica disponibilità per il colore
         prodottoDisponibilita.innerHTML = `<strong>Disponibilità:</strong> <span class="available">Disponibile</span>`;
     } else {
         prodottoDisponibilita.innerHTML = `<strong>Disponibilità:</strong> <span class="unavailable">Non disponibile</span>`;
     }
-
-    // Mostro il modale rimuovendo la classe 'nascosto'
-    modale.classList.remove('nascosto');
+    modale.classList.remove('nascosto'); // Mostra modale togliendo la classe
 }
 
+// Funzione che estrae categorie uniche e crea le <option> per la select
 function popolaCategorie(prodotti) {
-    const categorie = [];
-
-    // Raccolgo le categorie senza duplicati
-    prodotti.forEach(p => {
-        if (!categorie.includes(p.categoria)) {
-            categorie.push(p.categoria);
+    const categorie = []; // Array d'appoggio vuoto
+    prodotti.forEach(p => { // Cicla i prodotti
+        if (!categorie.includes(p.categoria)) { // Controlla duplicati
+            categorie.push(p.categoria); // Aggiunge categoria
         }
     });
-
-    // Menu a tendina per ogni categoria individuata
-    categorie.forEach(cat => {
-        const opzione = document.createElement('option');
-        opzione.value = cat;
-        opzione.textContent = cat;
-        filtroCategoriaSelect.appendChild(opzione);
+    categorie.forEach(cat => { // Cicla le categorie trovate
+        const opzione = document.createElement('option'); // Crea l'opzione
+        opzione.value = cat; // Imposta value
+        opzione.textContent = cat; // Imposta testo a schermo
+        filtroCategoriaSelect.appendChild(opzione); // Aggiunge al menu
     });
 }
 
-// Aggiungere anche l'event listener per chiudere il modale!
+// Ascolta click sul pulsante "X" per chiudere modale
 chiudiModaleBtn.addEventListener('click', () => {
-    modale.classList.add('nascosto');
+    modale.classList.add('nascosto'); // Nasconde modale
 });
 
-// --- FUNZIONE BONUS: Applica i filtri combinati (Nome + Categoria) ---
+// Funzione che aggiorna la tabella in base ai filtri di ricerca e categoria
 function applicaFiltri() {
-    const testoRicerca = cercaNomeInput.value.toLowerCase();
-    const categoriaSelezionata = filtroCategoriaSelect.value;
+    const testoRicerca = cercaNomeInput.value.toLowerCase(); // Legge input in minuscolo
+    const categoriaSelezionata = filtroCategoriaSelect.value; // Legge categoria scelta
 
-    const prodottiFiltrati = tuttiIProdotti.filter(prodotto => {
-        const matchNome = prodotto.nome.toLowerCase().includes(testoRicerca);
-        const matchCategoria = categoriaSelezionata === "" || prodotto.categoria === categoriaSelezionata;
-
-        return matchNome && matchCategoria;
+    const prodottiFiltrati = tuttiIProdotti.filter(prodotto => { // Crea array filtrato
+        const matchNome = prodotto.nome.toLowerCase().includes(testoRicerca); // Verifica match nome
+        const matchCategoria = categoriaSelezionata === "" || prodotto.categoria === categoriaSelezionata; // Verifica match categoria
+        return matchNome && matchCategoria; // Trattiene prodotto se entrambi validi
     });
-
-    mostraProdotti(prodottiFiltrati);
+    mostraProdotti(prodottiFiltrati); // Disegna tabella aggiornata
 }
 
-// --- LISTENERS BONUS: Ascolta i cambiamenti sugli input dei filtri ---
+// Ascolta input testo per avviare filtro in tempo reale
 cercaNomeInput.addEventListener('input', applicaFiltri);
+
+// Ascolta cambio select per avviare filtro
 filtroCategoriaSelect.addEventListener('change', applicaFiltri);
 
+// Richiama la funzione principale per scaricare dati all'avvio
 recuperaDati();
