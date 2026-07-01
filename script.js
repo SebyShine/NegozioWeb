@@ -136,7 +136,7 @@ function popolaCategorie(prodotti) {
         }
     });
 
-    // Creo un'opzione nel menu a tendina per ogni categoria individuata
+    // Menu a tendina per ogni categoria individuata
     categorie.forEach(cat => {
         const opzione = document.createElement('option');
         opzione.value = cat;
