@@ -150,4 +150,23 @@ chiudiModaleBtn.addEventListener('click', () => {
     modale.classList.add('nascosto');
 });
 
+// --- FUNZIONE BONUS: Applica i filtri combinati (Nome + Categoria) ---
+function applicaFiltri() {
+    const testoRicerca = cercaNomeInput.value.toLowerCase();
+    const categoriaSelezionata = filtroCategoriaSelect.value;
+
+    const prodottiFiltrati = tuttiIProdotti.filter(prodotto => {
+        const matchNome = prodotto.nome.toLowerCase().includes(testoRicerca);
+        const matchCategoria = categoriaSelezionata === "" || prodotto.categoria === categoriaSelezionata;
+
+        return matchNome && matchCategoria;
+    });
+
+    mostraProdotti(prodottiFiltrati);
+}
+
+// --- LISTENERS BONUS: Ascolta i cambiamenti sugli input dei filtri ---
+cercaNomeInput.addEventListener('input', applicaFiltri);
+filtroCategoriaSelect.addEventListener('change', applicaFiltri);
+
 recuperaDati();
